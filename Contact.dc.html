@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics=""><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&amp;family=Manrope:wght@300;400;500;600&amp;display=swap" rel="stylesheet"><style>body{margin:0;background:#F6F1E6;color:#26221B;font-family:'Manrope',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}*{box-sizing:border-box}a{color:#B8623E;text-decoration:none}a:hover{color:#94472B}input,select,textarea{font-family:'Manrope',sans-serif;font-weight:300;font-size:0.95rem;color:#26221B;background:#FBF6EC;border:1px solid rgba(38,34,27,.22);padding:0.85rem 0.9rem;width:100%;border-radius:0;outline:none}input:focus,select:focus,textarea:focus{border-color:#B8623E}label{font-size:0.76rem;letter-spacing:.14em;text-transform:uppercase;color:#5C5548;margin-bottom:0.45rem;display:block}@media (max-width:700px){[data-g2]{grid-template-columns:1fr !important}[data-hero]{height:auto !important;min-height:70vh !important}[data-navbar]{padding-left:18px !important;padding-right:18px !important}[data-navbar] nav{gap:12px !important}[data-navbar] nav a{font-size:0.72rem !important}[data-navbar] a[data-cta]{padding:0.6rem 0.9rem !important}[data-pad]{padding-left:18px !important;padding-right:18px !important}[data-span2]{grid-column:span 1 !important}[data-navbar]{flex-direction:column !important;align-items:flex-start !important;gap:10px !important;padding-top:0.8rem !important;padding-bottom:0.8rem !important}[data-navbar] nav{width:100% !important;justify-content:flex-start !important}[data-navbar] a[data-cta]{margin-left:auto !important}}</style></helmet>
+
+<div>
+
+<dc-import name="SiteHeader" current="contact" hint-size="100%,62px" style="position:sticky;top:0;z-index:30;display:block"></dc-import>
+
+<section style="max-width:1180px;margin:0 auto;padding:clamp(3rem,7vw,6rem) clamp(20px,6vw,64px) clamp(2rem,4vw,3rem)">
+  <span style="display:block;font-size:0.78rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#94472B;margin-bottom:1.1rem">Contact</span>
+  <h1 style="margin:0 0 1.2rem;font-family:'Fraunces',serif;font-weight:400;line-height:1.05;letter-spacing:-.01em;font-size:clamp(2.2rem,5.5vw,4.2rem);max-width:16ch;text-wrap:pretty">Tell us about the project.</h1>
+  <p style="margin:0;line-height:1.7;color:#5C5548;font-size:1.05rem;max-width:56ch;text-wrap:pretty">Whether it's a villa, a hotel refit or a pool terrace, send us the scope and we'll come back with a material palette and the catalogue. We answer every enquiry ourselves.</p>
+</section>
+
+<section id="catalogue" style="max-width:1180px;margin:0 auto;padding:0 clamp(20px,6vw,64px) clamp(3rem,6vw,5rem)">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(2rem,5vw,4.5rem);align-items:start;border-top:1px solid rgba(38,34,27,.14);padding-top:clamp(2rem,4vw,3rem)">
+    <div>
+      <h2 style="margin:0 0 1rem;font-family:'Fraunces',serif;font-weight:400;line-height:1.08;font-size:clamp(1.8rem,3.2vw,2.5rem);max-width:16ch;text-wrap:pretty">Get the full catalogue</h2>
+      <p style="margin:0 0 1.6rem;line-height:1.7;color:#5C5548;max-width:44ch;text-wrap:pretty">One PDF: all four lines, with formats, finishes, applications and technical data. We'll send it straight to your inbox.</p>
+      <div style="display:flex;flex-direction:column;gap:0.9rem;border-top:1px solid rgba(38,34,27,.14);padding-top:1.5rem">
+        <div style="display:flex;gap:0.9rem;align-items:baseline"><span style="font-family:'Fraunces',serif;color:#94472B;font-size:0.85rem">01</span><span style="font-size:0.95rem;line-height:1.6;color:#5C5548">FB Hout — engineered oak for floors, walls and ceilings</span></div>
+        <div style="display:flex;gap:0.9rem;align-items:baseline"><span style="font-family:'Fraunces',serif;color:#94472B;font-size:0.85rem">02</span><span style="font-size:0.95rem;line-height:1.6;color:#5C5548">Mas Maya — seamless limestone mineral finish</span></div>
+        <div style="display:flex;gap:0.9rem;align-items:baseline"><span style="font-family:'Fraunces',serif;color:#94472B;font-size:0.85rem">03</span><span style="font-size:0.95rem;line-height:1.6;color:#5C5548">Tarimatec — decking, façade cladding and screening</span></div>
+        <div style="display:flex;gap:0.9rem;align-items:baseline"><span style="font-family:'Fraunces',serif;color:#94472B;font-size:0.85rem">04</span><span style="font-size:0.95rem;line-height:1.6;color:#5C5548">Wow Design — wellness porcelain for pools and wet areas</span></div>
+      </div>
+    </div>
+    <div style="background:#EDE3D0;padding:clamp(1.6rem,3.5vw,2.6rem)">
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:1rem;min-height:320px;justify-content:center">
+          <div style="font-family:'Fraunces',serif;font-size:1.8rem;line-height:1.2">Thank you — it's on its way.</div>
+          <p style="margin:0;line-height:1.7;color:#5C5548;max-width:38ch;text-wrap:pretty">Check your inbox in the next few minutes. If it hasn't landed, look in spam or just reply to us directly at {{ contactEmail }}.</p>
+          <sc-if value="{{ hasWhatsapp }}" hint-placeholder-val="{{ false }}"><a href="{{ whatsappLink }}" target="_blank" rel="noopener" style="display:inline-block;background:#B8623E;border:1px solid #B8623E;color:#FBF6EC;font-weight:500;font-size:0.92rem;padding:0.95rem 2.1rem;align-self:flex-start" style-hover="background:#94472B;color:#FBF6EC">Message us on WhatsApp</a></sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ submit }}" style="display:flex;flex-direction:column;gap:1rem">
+          <div><label for="c-name">Name*</label><input id="c-name" name="name" type="text" required="" placeholder="Your name"></div>
+          <div><label for="c-email">Work email*</label><input id="c-email" name="email" type="email" required="" placeholder="you@studio.com"></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:1rem">
+            <div><label for="c-role">You are*</label><select id="c-role" name="role" required=""><option>Architect</option><option>Interior designer</option><option>Contractor</option><option>Developer</option><option>Other</option></select></div>
+            <div><label for="c-company">Company</label><input id="c-company" name="company" type="text" placeholder="Studio or firm"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:1rem">
+            <div><label for="c-island">Island</label><select id="c-island" name="island"><option>Curaçao</option><option>Aruba</option><option>Bonaire</option><option>Elsewhere</option></select></div>
+            <div><label for="c-phone">Phone / WhatsApp</label><input id="c-phone" name="phone" type="tel" placeholder="+599"></div>
+          </div>
+          <div><label for="c-project">What are you working on?</label><textarea id="c-project" name="project" rows="3" placeholder="Villa in Jan Thiel — floors, terrace and pool. Breaking ground in March."></textarea></div>
+          <label for="c-drop" style="display:flex;gap:0.6rem;align-items:flex-start;font-size:0.88rem;line-height:1.5;color:#26221B;cursor:pointer"><input id="c-drop" name="monthlyDrop" type="checkbox" style="width:auto;margin:0.2rem 0 0;accent-color:#B8623E">Also send me the monthly material drop.</label>
+          <button type="submit" style="background:#B8623E;border:1px solid #B8623E;color:#FBF6EC;font-family:'Manrope',sans-serif;font-weight:500;font-size:0.92rem;padding:1rem 2.1rem;cursor:pointer;align-self:flex-start" style-hover="background:#94472B">Send me the catalogue</button>
+          <p style="margin:0;font-size:0.78rem;line-height:1.6;color:#5C5548">We use your details to send the catalogue and follow up on your project. We never share them.</p>
+        </form>
+      </sc-if>
+    </div>
+  </div>
+</section>
+
+<section id="samples" style="background:#26221B;color:#EAE2D2;padding:clamp(3rem,7vw,7rem) clamp(20px,6vw,64px)">
+  <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(2rem,5vw,5vw);align-items:start">
+    <div>
+      <span style="display:block;font-size:0.78rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#E4C7A8;margin-bottom:1.1rem">Samples</span>
+      <h2 style="margin:0 0 1.2rem;font-family:'Fraunces',serif;font-weight:300;line-height:1.08;font-size:clamp(1.9rem,3.6vw,2.9rem);color:#FBF6EC;max-width:16ch;text-wrap:pretty">Put it on the table.</h2>
+      <p style="margin:0;line-height:1.7;color:rgba(234,226,210,.82);max-width:46ch;text-wrap:pretty">Tell us which finishes you're weighing up and we'll send physical samples to your studio.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;align-items:flex-start">
+      <a href="{{ sampleMailto }}" style="display:inline-block;background:#E4D3AE;border:1px solid #E4D3AE;color:#26221B;font-weight:500;font-size:0.92rem;padding:0.95rem 2.1rem" style-hover="background:#FBF6EC;border-color:#FBF6EC">Request samples by email</a>
+      <sc-if value="{{ hasWhatsapp }}" hint-placeholder-val="{{ false }}"><a href="{{ whatsappLink }}" target="_blank" rel="noopener" style="display:inline-block;background:transparent;border:1px solid rgba(251,246,236,.5);color:#FBF6EC;font-weight:500;font-size:0.92rem;padding:0.95rem 2.1rem" style-hover="background:#FBF6EC;color:#26221B;border-color:#FBF6EC">Ask on WhatsApp</a></sc-if>
+    </div>
+  </div>
+</section>
+
+<section style="max-width:1180px;margin:0 auto;padding:clamp(3rem,6vw,5.5rem) clamp(20px,6vw,64px)">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:2px;background:rgba(38,34,27,.14)">
+    <div style="background:#F6F1E6;padding:1.8rem 1.6rem">
+      <div style="font-size:0.74rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#94472B;margin-bottom:0.8rem">Email</div>
+      <a href="{{ plainMailto }}" style="font-family:'Fraunces',serif;font-size:1.15rem;color:#26221B;word-break:break-word" style-hover="color:#B8623E">{{ contactEmail }}</a>
+    </div>
+    <sc-if value="{{ hasWhatsapp }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#F6F1E6;padding:1.8rem 1.6rem">
+      <div style="font-size:0.74rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#94472B;margin-bottom:0.8rem">WhatsApp</div>
+      <a href="{{ whatsappLink }}" target="_blank" rel="noopener" style="font-family:'Fraunces',serif;font-size:1.15rem;color:#26221B" style-hover="color:#B8623E">{{ whatsappDisplay }}</a>
+    </div>
+    </sc-if>
+    <div style="background:#F6F1E6;padding:1.8rem 1.6rem">
+      <div style="font-size:0.74rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#94472B;margin-bottom:0.8rem">Where we work</div>
+      <div style="font-family:'Fraunces',serif;font-size:1.15rem;line-height:1.5">Curaçao · Aruba · Bonaire</div>
+    </div>
+    <div style="background:#F6F1E6;padding:1.8rem 1.6rem">
+      <div style="font-size:0.74rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#94472B;margin-bottom:0.8rem">Company</div>
+      <div style="font-family:'Fraunces',serif;font-size:1.15rem;line-height:1.5">Idea II B.V.</div>
+      <div style="font-size:0.85rem;color:#5C5548;padding-top:0.3rem">Trading as Kalki Materials</div>
+    </div>
+  </div>
+  
+</section>
+
+<footer style="background:#26221B;color:rgba(234,226,210,.7);padding:clamp(2.5rem,5vw,4.5rem) clamp(20px,6vw,64px)">
+  <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:clamp(1.5rem,4vw,3rem);font-size:0.86rem;line-height:1.8">
+    <div>
+      <div style="font-family:'Fraunces',serif;font-weight:500;font-size:1.15rem;color:#FBF6EC;margin-bottom:0.9rem">Kalki Materials</div>
+      <div>A curated architectural material library for Aruba, Bonaire &amp; Curaçao. A brand of IDEA II B.V.</div>
+    </div>
+    <div>
+      <div style="font-size:0.74rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#E4C7A8;margin-bottom:0.7rem">The library</div>
+      <div style="display:flex;flex-direction:column;gap:0.25rem"><a href="FB Hout.dc.html" style="color:rgba(234,226,210,.7)" style-hover="color:#FBF6EC">FB Hout — Engineered oak</a><a href="Mas Maya.dc.html" style="color:rgba(234,226,210,.7)" style-hover="color:#FBF6EC">Mas Maya — Mineral finish</a><a href="Tarimatec.dc.html" style="color:rgba(234,226,210,.7)" style-hover="color:#FBF6EC">Tarimatec — Exterior system</a><a href="Wow Design.dc.html" style="color:rgba(234,226,210,.7)" style-hover="color:#FBF6EC">Wow Design — Porcelain</a></div>
+    </div>
+    <div>
+      <div style="font-size:0.74rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#E4C7A8;margin-bottom:0.7rem">Studio</div>
+      <div style="display:flex;flex-direction:column;gap:0.25rem"><a href="About.dc.html" style="color:rgba(234,226,210,.7)" style-hover="color:#FBF6EC">About Kalki</a><a href="Contact.dc.html" style="color:rgba(234,226,210,.7)" style-hover="color:#FBF6EC">Contact</a><a href="Contact.dc.html#catalogue" style="color:rgba(234,226,210,.7)" style-hover="color:#FBF6EC">Download the catalogue</a><a href="Contact.dc.html#samples" style="color:rgba(234,226,210,.7)" style-hover="color:#FBF6EC">Request samples</a></div>
+    </div>
+    <div>
+      <div style="font-size:0.74rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#E4C7A8;margin-bottom:0.7rem">Contact</div>
+      <div>Kalkimaterials@gmail.com<br>Aruba · Bonaire · Curaçao<br>For architects, interior designers &amp; contractors</div>
+    </div>
+  </div>
+  <div style="max-width:1180px;margin:clamp(1.5rem,4vw,3rem) auto 0;font-size:0.8rem;color:rgba(234,226,210,.45)">© 2026 IDEA II B.V. — Kalki Materials</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;contactEmail&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Kalkimaterials@gmail.com&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5999XXXXXXX&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { sent: false };
+  renderVals() {
+    const email = this.props.contactEmail ?? 'Kalkimaterials@gmail.com';
+    const raw = this.props.whatsappNumber ?? '5999XXXXXXX';
+    const wa = /x/i.test(raw) ? '' : raw.replace(/[^0-9]/g, '');
+    return {
+      sent: this.state.sent,
+      notSent: !this.state.sent,
+      hasWhatsapp: wa.length >= 7,
+      contactEmail: email,
+      whatsappDisplay: '+' + raw.replace(/[^0-9X]/gi, ''),
+      whatsappLink: 'https://wa.me/' + wa + '?text=' + encodeURIComponent("Hi Kalki — I'd like to know more about your materials."),
+      plainMailto: 'mailto:' + email,
+      sampleMailto: 'mailto:' + email + '?subject=' + encodeURIComponent('Kalki Materials — sample request') + '&body=' + encodeURIComponent('Project:\nIsland:\nFinishes I\u2019d like to see:\n'),
+      submit: (e) => { e.preventDefault(); this.setState({ sent: true }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

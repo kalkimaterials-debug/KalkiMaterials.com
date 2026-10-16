@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<header ref="{{ rootRef }}" style="position:relative;background:#26221B;font-family:'Manrope',sans-serif;font-weight:300">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;padding:1.1rem clamp(20px,6vw,64px)">
+    <a href="Home.dc.html" style="font-family:'Fraunces',serif;font-weight:500;font-size:1.15rem;color:#FBF6EC">Kalki Materials</a>
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <nav aria-label="Main" style="display:flex;align-items:center;gap:clamp(14px,2.2vw,32px);flex-wrap:wrap">
+        <button type="button" ref="{{ btnRef }}" aria-expanded="{{ openStr }}" aria-controls="kalki-materials-panel" onClick="{{ onBtnClick }}" onKeyDown="{{ onBtnKeyDown }}" onMouseEnter="{{ onBtnEnter }}" onMouseLeave="{{ onLeave }}" style="appearance:none;background:none;border:0;padding:0;margin:0;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:0.8rem;letter-spacing:.1em;text-transform:uppercase;color:{{ matColor }}" style-hover="color:#FBF6EC">Materials<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" style="transition:transform .2s ease;transform:rotate({{ chevDeg }}deg)"><path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.3"></path></svg></button>
+        <a href="About.dc.html" aria-current="{{ aboutCurrent }}" style="font-size:0.8rem;letter-spacing:.1em;text-transform:uppercase;color:{{ aboutColor }}" style-hover="color:#FBF6EC">About</a>
+        <a href="Contact.dc.html" aria-current="{{ contactCurrent }}" style="font-size:0.8rem;letter-spacing:.1em;text-transform:uppercase;color:{{ contactColor }}" style-hover="color:#FBF6EC">Contact</a>
+        <a href="Contact.dc.html#catalogue" style="font-size:0.8rem;letter-spacing:.1em;text-transform:uppercase;color:#26221B;background:#E4D3AE;padding:0.7rem 1.2rem" style-hover="background:#FBF6EC;color:#26221B">Download catalogue</a>
+      </nav>
+    </sc-if>
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+      <button type="button" ref="{{ menuBtnRef }}" aria-label="Menu" aria-expanded="{{ menuOpenStr }}" aria-controls="kalki-mobile-menu" onClick="{{ toggleMenu }}" style="appearance:none;background:none;border:1px solid rgba(251,246,236,.3);width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#FBF6EC;padding:0">
+        <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 3l12 12M15 3 3 15" stroke="currentColor" stroke-width="1.4" fill="none"></path></svg></sc-if>
+        <sc-if value="{{ menuClosed }}" hint-placeholder-val="{{ true }}"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.4" fill="none"></path></svg></sc-if>
+      </button>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ panelOpen }}" hint-placeholder-val="{{ false }}">
+    <div id="kalki-materials-panel" role="region" aria-label="Materials" onMouseEnter="{{ onPanelEnter }}" onMouseLeave="{{ onLeave }}" onKeyDown="{{ onPanelKeyDown }}" style="position:absolute;top:100%;left:0;right:0;background:#F6F1E6;border-bottom:1px solid rgba(38,34,27,.14);box-shadow:0 22px 44px -22px rgba(24,20,14,.45)">
+      <div style="max-width:1180px;margin:0 auto;padding:1.6rem clamp(20px,6vw,64px) 1.2rem">
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+          <sc-for list="{{ cards }}" as="card" hint-placeholder-count="4">
+            <a href="{{ card.href }}" ref="{{ card.ref }}" aria-current="{{ card.ariaCurrent }}" style="display:flex;flex-direction:column;min-width:0;background:#FBF6EC;border:1px solid {{ card.border }};padding:8px;color:#26221B" style-hover="border-color:{{ card.borderHover }};color:#26221B">
+              <div style="aspect-ratio:16/10;overflow:hidden;background:#26221B"><img src="{{ card.img }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+              <div style="padding:0.85rem 0.45rem 0.45rem">
+                <div style="display:flex;align-items:center;gap:8px;font-family:'Fraunces',serif;font-weight:400;font-size:1.15rem;color:#26221B">{{ card.name }}<sc-if value="{{ card.isCurrent }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:#B8623E;flex:none"></span></sc-if></div>
+                <div style="margin-top:0.3rem;font-size:0.72rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#94472B">{{ card.label }}</div>
+                <div style="margin-top:0.35rem;font-size:0.88rem;line-height:1.5;color:#5C5548">{{ card.line }}</div>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+        <div style="margin-top:1.1rem;padding-top:1rem;border-top:1px solid rgba(38,34,27,.14);display:flex">
+          <a href="Contact.dc.html#catalogue" style="font-size:0.9rem;font-weight:500;color:#B8623E;white-space:nowrap" style-hover="color:#94472B">Download the catalogue →</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ mobileMenuVisible }}" hint-placeholder-val="{{ false }}">
+    <nav id="kalki-mobile-menu" aria-label="Main" style="position:absolute;top:100%;left:0;right:0;background:#26221B;border-top:1px solid rgba(251,246,236,.12);max-height:calc(100vh - 70px);overflow-y:auto;padding:0 18px 1.4rem;display:flex;flex-direction:column;box-shadow:0 22px 44px -22px rgba(0,0,0,.6)">
+      <button type="button" aria-expanded="{{ accOpenStr }}" aria-controls="kalki-mobile-materials" onClick="{{ toggleAcc }}" style="appearance:none;background:none;border:0;border-bottom:1px solid rgba(251,246,236,.12);padding:0;min-height:52px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font:inherit;font-size:0.85rem;letter-spacing:.1em;text-transform:uppercase;color:#FBF6EC;text-align:left">Materials<svg width="12" height="12" viewBox="0 0 10 10" aria-hidden="true" style="transition:transform .2s ease;transform:rotate({{ accDeg }}deg)"><path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.3"></path></svg></button>
+      <sc-if value="{{ accOpen }}" hint-placeholder-val="{{ false }}">
+        <div id="kalki-mobile-materials" style="display:flex;flex-direction:column;border-bottom:1px solid rgba(251,246,236,.12);padding:0.3rem 0 0.6rem">
+          <sc-for list="{{ cards }}" as="card" hint-placeholder-count="4">
+            <a href="{{ card.href }}" aria-current="{{ card.ariaCurrent }}" style="display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:52px;padding:0.4rem 0 0.4rem 14px;color:#FBF6EC">
+              <span style="display:flex;align-items:center;gap:8px;font-family:'Fraunces',serif;font-size:1.05rem;color:#FBF6EC">{{ card.name }}<sc-if value="{{ card.isCurrent }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:#E4C7A8;flex:none"></span></sc-if></span>
+              <span style="font-size:0.7rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#E4C7A8">{{ card.label }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </sc-if>
+      <a href="About.dc.html" aria-current="{{ aboutCurrent }}" style="display:flex;align-items:center;min-height:52px;border-bottom:1px solid rgba(251,246,236,.12);font-size:0.85rem;letter-spacing:.1em;text-transform:uppercase;color:{{ aboutColor }}">About</a>
+      <a href="Contact.dc.html" aria-current="{{ contactCurrent }}" style="display:flex;align-items:center;min-height:52px;border-bottom:1px solid rgba(251,246,236,.12);font-size:0.85rem;letter-spacing:.1em;text-transform:uppercase;color:{{ contactColor }}">Contact</a>
+      <a href="Contact.dc.html#catalogue" style="margin-top:1.2rem;display:flex;align-items:center;justify-content:center;min-height:48px;font-size:0.8rem;letter-spacing:.1em;text-transform:uppercase;color:#26221B;background:#E4D3AE" style-hover="background:#FBF6EC;color:#26221B">Download catalogue</a>
+    </nav>
+  </sc-if>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:480},&quot;current&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;fb-hout&quot;,&quot;mas-maya&quot;,&quot;tarimatec&quot;,&quot;wow-design&quot;,&quot;about&quot;,&quot;contact&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { open: false, mobile: window.matchMedia('(max-width:700px)').matches, menuOpen: false, accOpen: false };
+  rootRef = React.createRef();
+  btnRef = React.createRef();
+  menuBtnRef = React.createRef();
+  cardEls = [];
+  cardRefs = [0, 1, 2, 3].map(i => el => { this.cardEls[i] = el; });
+
+  componentDidMount() {
+    this.mq = window.matchMedia('(max-width:700px)');
+    this.onMq = e => this.setState({ mobile: e.matches, open: false, menuOpen: false });
+    this.mq.addEventListener('change', this.onMq);
+    this.onDocDown = e => {
+      const r = this.rootRef.current;
+      if (r && !r.contains(e.target) && (this.state.open || this.state.menuOpen)) this.setState({ open: false, menuOpen: false });
+    };
+    this.onDocKey = e => {
+      if (e.key !== 'Escape') return;
+      if (this.state.open) { this.close(); this.btnRef.current && this.btnRef.current.focus(); }
+      if (this.state.menuOpen) { this.setState({ menuOpen: false }); this.menuBtnRef.current && this.menuBtnRef.current.focus(); }
+    };
+    this.onFocusIn = e => {
+      const r = this.rootRef.current;
+      if (r && !r.contains(e.target) && (this.state.open || this.state.menuOpen)) this.setState({ open: false, menuOpen: false });
+    };
+    document.addEventListener('mousedown', this.onDocDown);
+    document.addEventListener('keydown', this.onDocKey);
+    document.addEventListener('focusin', this.onFocusIn);
+  }
+  componentWillUnmount() {
+    this.mq.removeEventListener('change', this.onMq);
+    document.removeEventListener('mousedown', this.onDocDown);
+    document.removeEventListener('keydown', this.onDocKey);
+    document.removeEventListener('focusin', this.onFocusIn);
+    clearTimeout(this.tOpen); clearTimeout(this.tClose);
+  }
+  openNow(focusFirst) {
+    clearTimeout(this.tOpen); clearTimeout(this.tClose);
+    if (!this.state.open) this.openedAt = Date.now();
+    this.setState({ open: true }, () => { if (focusFirst && this.cardEls[0]) this.cardEls[0].focus(); });
+  }
+  close() { clearTimeout(this.tOpen); clearTimeout(this.tClose); this.setState({ open: false }); }
+
+  renderVals() {
+    const cur = this.props.current ?? 'home';
+    const { open, mobile, menuOpen, accOpen } = this.state;
+    const dim = 'rgba(251,246,236,.72)', lit = '#FBF6EC';
+    const data = [
+      { key: 'fb-hout', name: 'FB Hout', label: 'Engineered oak', line: 'Floors, walls and ceilings', href: 'FB Hout.dc.html', img: 'assets/fb-hout-interior.webp' },
+      { key: 'mas-maya', name: 'Mas Maya', label: 'Mineral finish', line: 'Walls, floors and wet areas', href: 'Mas Maya.dc.html', img: 'assets/mas-maya-natural.webp' },
+      { key: 'tarimatec', name: 'Tarimatec', label: 'Exterior system', line: 'Decking, façade and screens', href: 'Tarimatec.dc.html', img: 'assets/tarimatec-pool-edge.jpg' },
+      { key: 'wow-design', name: 'Wow Design', label: 'Porcelain', line: 'Pools and wet areas', href: 'Wow Design.dc.html', img: 'assets/wow-pool.jpg' },
+    ];
+    const R = window.__resources || {};
+    const cards = data.map((c, i) => {
+      const isCurrent = c.key === cur;
+      return { ...c, img: R['hdr-' + c.key] || c.img, isCurrent, ariaCurrent: isCurrent ? 'page' : undefined, ref: this.cardRefs[i],
+        border: isCurrent ? '#B8623E' : 'rgba(38,34,27,.12)', borderHover: isCurrent ? '#B8623E' : 'rgba(38,34,27,.4)' };
+    });
+    return {
+      rootRef: this.rootRef, btnRef: this.btnRef, menuBtnRef: this.menuBtnRef,
+      isDesktop: !mobile, isMobile: mobile,
+      panelOpen: open && !mobile, openStr: open ? 'true' : 'false',
+      chevDeg: open ? 180 : 0,
+      matColor: open || cards.some(c => c.isCurrent) ? lit : dim,
+      aboutColor: cur === 'about' ? lit : dim, aboutCurrent: cur === 'about' ? 'page' : undefined,
+      contactColor: cur === 'contact' ? lit : dim, contactCurrent: cur === 'contact' ? 'page' : undefined,
+      cards,
+      menuOpen, menuClosed: !menuOpen, menuOpenStr: menuOpen ? 'true' : 'false',
+      mobileMenuVisible: mobile && menuOpen,
+      accOpen, accOpenStr: accOpen ? 'true' : 'false', accDeg: accOpen ? 180 : 0,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      toggleAcc: () => this.setState(s => ({ accOpen: !s.accOpen })),
+      onBtnEnter: () => { clearTimeout(this.tClose); if (!this.state.open) this.tOpen = setTimeout(() => this.openNow(false), 120); },
+      onLeave: () => { clearTimeout(this.tOpen); if (this.state.open) this.tClose = setTimeout(() => this.close(), 200); },
+      onPanelEnter: () => clearTimeout(this.tClose),
+      onBtnClick: e => {
+        const kb = e.detail === 0;
+        if (this.state.open) {
+          if (!kb && Date.now() - (this.openedAt || 0) < 400) return;
+          this.close();
+        } else this.openNow(kb);
+      },
+      onBtnKeyDown: e => { if (e.key === 'ArrowDown') { e.preventDefault(); this.openNow(true); } },
+      onPanelKeyDown: e => {
+        const k = e.key;
+        if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(k)) return;
+        e.preventDefault();
+        const els = this.cardEls.filter(Boolean), n = els.length;
+        const i = els.indexOf(document.activeElement);
+        let j = k === 'Home' ? 0 : k === 'End' ? n - 1 : (k === 'ArrowRight' || k === 'ArrowDown') ? (i + 1) % n : (i < 0 ? n - 1 : (i - 1 + n) % n);
+        els[j] && els[j].focus();
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>
