@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "serve . -l tcp://0.0.0.0:${PORT:-3000} --no-clipboard",
+    "start": "node server.js",
     "build": "node scripts/build.mjs"
-  },
-  "dependencies": {
-    "serve": "^14.2.4"
   },
   "engines": {
     "node": ">=18"
   },
   "devDependencies": {
     "linkedom": "^0.18.9"
+  },
+  "dependencies": {
+    "serve-handler": "^6.1.6"
   }
 }
