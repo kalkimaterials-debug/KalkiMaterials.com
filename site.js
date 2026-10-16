@@ -113,6 +113,7 @@
         body: JSON.stringify(data)
       }).then(function (res) {
         if (!res.ok) throw new Error(res.status);
+        if (window.gtag) gtag('event', kind === 'onJoin' ? 'sign_up' : 'generate_lead', { form: kind === 'onJoin' ? 'newsletter' : 'catalogue' });
         if (kind === 'onJoin') {
           if (btn) btn.textContent = 'Joined';
         } else {
