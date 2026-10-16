@@ -58,6 +58,19 @@ async function resend(path, body) {
   return res.json();
 }
 
+// Notifications to Kalki show the visitor as the sender name, so the inbox
+// says who wrote ("Patricia Ruiz via kalkimaterials.com"). The address stays
+// the verified RESEND_FROM one; replies go to the visitor through reply_to.
+const FROM_ADDRESS = (/<([^>]+)>/.exec(FROM) || [, FROM])[1];
+function fromVisitor(name) {
+  const safe = name.replace(/["<>\r\n\\]/g, '').trim().slice(0, 60);
+  return safe ? `"${safe} via kalkimaterials.com" <${FROM_ADDRESS}>` : FROM;
+}
+
+function intro(text) {
+  return `<p style="font-family:sans-serif;font-size:15px;color:#26221B">${esc(text)}</p>`;
+}
+
 function table(rows) {
   return '<table cellpadding="6" style="border-collapse:collapse;font-family:sans-serif;font-size:14px">' +
     rows.filter(([, v]) => v).map(([k, v]) =>
@@ -73,9 +86,9 @@ async function handleCatalogue(d) {
   };
   if (!f.name || !EMAIL_RE.test(f.email)) return 400;
   await resend('/emails', {
-    from: FROM, to: [TO], reply_to: f.email,
-    subject: `Catalogue request — ${f.name}${f.company ? ' (' + f.company + ')' : ''}`,
-    html: table([['Name', f.name], ['Email', f.email], ['Role', f.role], ['Company', f.company],
+    from: fromVisitor(f.name), to: [TO], reply_to: f.email,
+    subject: `Catalogue request — ${f.name}${f.company ? ' (' + f.company + ')' : ''} <${f.email}>`,
+    html: intro(`${f.name} (${f.email}) requested the catalogue on the website.${CATALOGUE_URL ? ' The catalogue was sent to them automatically.' : ''} Reply to this email to answer them directly.`) + table([['Name', f.name], ['Email', f.email], ['Role', f.role], ['Company', f.company],
       ['Island', f.island], ['Phone', f.phone], ['Project', f.project], ['Monthly drop', f.monthlyDrop]]),
   });
   if (CATALOGUE_URL) {
@@ -107,9 +120,9 @@ async function handleNewsletter(d) {
   const added = await addToAudience(email, '');
   if (!added) {
     await resend('/emails', {
-      from: FROM, to: [TO], reply_to: email,
+      from: fromVisitor(email), to: [TO], reply_to: email,
       subject: `Monthly drop sign-up — ${email}`,
-      html: table([['Email', email]]),
+      html: intro(`${email} signed up for the monthly material drop on the website.`) + table([['Email', email]]),
     });
   }
   return 200;
