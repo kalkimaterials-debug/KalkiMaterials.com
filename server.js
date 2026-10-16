@@ -83,8 +83,8 @@ async function handleCatalogue(d) {
       from: FROM, to: [f.email], reply_to: TO,
       subject: 'Your Kalki Materials catalogue',
       html: `<div style="font-family:sans-serif;font-size:15px;line-height:1.6;color:#26221B">` +
-        `<p>Hi ${esc(f.name)},</p><p>Thanks for your interest. Here is the full catalogue — all four lines, with formats, finishes and technical data${CATALOGUE_ATTACHMENT ? '. It is attached to this email, and you can also download it here' : ''}:</p>` +
-        `<p><a href="${esc(CATALOGUE_URL)}" style="display:inline-block;background:#B8623E;color:#FBF6EC;padding:12px 24px;text-decoration:none">Download the catalogue</a></p>` +
+        `<p>Hi ${esc(f.name)},</p><p>Thanks for your interest. Here is the full catalogue — all four lines, with formats, finishes and technical data${CATALOGUE_ATTACHMENT ? '. You will find it attached to this email.</p>' :
+          `:</p><p><a href="${esc(CATALOGUE_URL)}" style="display:inline-block;background:#B8623E;color:#FBF6EC;padding:12px 24px;text-decoration:none">Download the catalogue</a></p>`}` +
         `<p>Reply to this email with any questions about your project.</p><p>Kalki Materials</p></div>`,
       ...(CATALOGUE_ATTACHMENT && { attachments: [{ filename: 'Kalki-Materials-Catalogue.pdf', content: CATALOGUE_ATTACHMENT }] }),
     });
