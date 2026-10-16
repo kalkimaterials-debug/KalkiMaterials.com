@@ -4,7 +4,7 @@
 //   npm run build
 //
 // Edit the pages in source/, then rebuild and commit the generated files.
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseHTML } from 'linkedom';
@@ -27,6 +27,66 @@ const TITLES = {
 const DYNAMIC = new Set(['sent', 'notSent', 'panelOpen', 'mobileMenuVisible', 'menuOpen', 'menuClosed', 'accOpen']);
 // Conditions that depend only on viewport width are handled with CSS.
 const RESPONSIVE = { isDesktop: 'only-desktop', isMobile: 'only-mobile' };
+
+// Photos dropped into <image-slot>s in Claude Design live in this sidecar as
+// data URLs. They are written out to assets/finishes/ and the slots become
+// plain <img> tags, so the live site needs neither image-slot.js nor the
+// 800 KB sidecar.
+const SLOTS_FILE = join(SRC, '.image-slots.state.json');
+const SLOTS = existsSync(SLOTS_FILE) ? JSON.parse(readFileSync(SLOTS_FILE, 'utf8')) : {};
+const FINISHES = join(ROOT, 'assets', 'finishes');
+
+function webpSize(buf) {
+  const chunk = buf.toString('ascii', 12, 16);
+  if (chunk === 'VP8X') return [1 + buf.readUIntLE(24, 3), 1 + buf.readUIntLE(27, 3)];
+  if (chunk === 'VP8L') {
+    const b = buf.readUInt32LE(21);
+    return [1 + (b & 0x3fff), 1 + ((b >> 14) & 0x3fff)];
+  }
+  if (chunk === 'VP8 ') return [buf.readUInt16LE(26) & 0x3fff, buf.readUInt16LE(28) & 0x3fff];
+  throw new Error('unknown WebP chunk ' + chunk);
+}
+
+// Turns one image slot into an <img>, reproducing the pan the user set in
+// Claude Design (stored as the image centre's offset in frame-%) with
+// object-position. frameAspect is the slot's width/height.
+function slotImage(document, node, frameAspect) {
+  const id = node.getAttribute('id');
+  let v = SLOTS[id];
+  if (typeof v === 'string') v = { u: v };
+  if (!v || !v.u) return null;
+  const m = /^data:image\/(\w+);base64,(.*)$/.exec(v.u);
+  if (!m) throw new Error('slot ' + id + ': unsupported data URL');
+  const buf = Buffer.from(m[2], 'base64');
+  mkdirSync(FINISHES, { recursive: true });
+  const name = `${id}.${m[1]}`;
+  writeFileSync(join(FINISHES, name), buf);
+
+  const pos = (offset, overflowRatio) => {
+    const max = Math.max(0, (overflowRatio - 1) * 50);
+    return max > 0 ? Math.min(100, Math.max(0, 50 - (offset || 0) * 50 / max)) : 50;
+  };
+  let px = 50, py = 50;
+  if (m[1] === 'webp' && frameAspect) {
+    const [iw, ih] = webpSize(buf);
+    const ia = iw / ih;
+    px = pos(v.x, Math.max(1, ia / frameAspect));
+    py = pos(v.y, Math.max(1, frameAspect / ia));
+  }
+  if (v.s && v.s !== 1) console.warn(`slot ${id}: zoom ${v.s} is not reproduced`);
+
+  const img = document.createElement('img');
+  img.setAttribute('src', 'assets/finishes/' + name);
+  img.setAttribute('alt', (node.getAttribute('placeholder') || '').replace(/^Photo needed — /, ''));
+  img.setAttribute('loading', 'lazy');
+  img.setAttribute('style', `display:block;width:100%;height:100%;aspect-ratio:3/2;object-fit:cover;object-position:${+px.toFixed(2)}% ${+py.toFixed(2)}%`);
+  return img;
+}
+
+function aspectOf(el) {
+  const m = /aspect-ratio:\s*([\d.]+)\s*(?:\/\s*([\d.]+))?/.exec((el && el.getAttribute && el.getAttribute('style')) || '');
+  return m ? parseFloat(m[1]) / (m[2] ? parseFloat(m[2]) : 1) : null;
+}
 
 function parseDc(file) {
   const text = readFileSync(join(SRC, file), 'utf8');
@@ -113,6 +173,12 @@ function makeRenderer(document, hoverCss) {
       for (const item of list) renderChildren(node, dest, { ...scope, [as]: item }, header);
       return;
     }
+    if (tag === 'image-slot') {
+      const img = slotImage(document, node, aspectOf(node.parentNode));
+      if (img) dest.appendChild(img);
+      else console.warn(`slot ${node.getAttribute('id')}: no photo in source/.image-slots.state.json, left empty`);
+      return;
+    }
     if (tag === 'dc-import') {
       const wrap = document.createElement('div');
       wrap.setAttribute('style', node.getAttribute('style') || '');
@@ -188,6 +254,7 @@ function buildPage(file) {
   const helmet = tdoc.querySelector('helmet');
   if (helmet) {
     for (const child of [...helmet.childNodes]) {
+      if (child.nodeType === 1 && child.localName === 'script' && /image-slot\.js$/.test(child.getAttribute('src') || '')) continue;
       if (child.nodeType === 1) head.appendChild(document.importNode ? document.importNode(child, true) : child.cloneNode(true));
     }
     helmet.remove();
