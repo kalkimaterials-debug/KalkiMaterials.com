@@ -23,6 +23,29 @@ const TITLES = {
   'Wow Design': 'Wow Design, porcelain — Kalki Materials',
 };
 
+// Meta descriptions, used by search engines and AI assistants.
+const DESCRIPTIONS = {
+  'Home': 'Kalki Materials supplies architects, interior designers and contractors in Aruba, Bonaire and Curaçao with four European surface lines: engineered oak, limestone plaster, composite decking and cladding, and pool porcelain.',
+  'About': 'Kalki Materials is a curated B2B material distributor for the ABC islands, bringing four European manufacturers into one relationship with specification support, import and delivery.',
+  'Contact': 'Request the Kalki Materials catalogue or physical samples, or tell us about your project in Aruba, Bonaire or Curaçao.',
+  'FB Hout': 'FB Hout engineered European oak for floors, walls and ceilings, built for humid coastal climates. Supplied in Aruba, Bonaire and Curaçao by Kalki Materials.',
+  'Mas Maya': 'Mas Maya hand-applied limestone plaster: one seamless, breathable, water-resistant surface from floor to pool. Supplied in Aruba, Bonaire and Curaçao by Kalki Materials.',
+  'Tarimatec': 'Tarimatec decking, ventilated façade cladding and screens in Ecofiber Stone Composite, maintenance-free for sun, rain and salt air. Supplied in Aruba, Bonaire and Curaçao by Kalki Materials.',
+  'Wow Design': 'Wow Design small-format wellness porcelain for pools, terraces and bathrooms, plus Icon and Reef stoneware. Supplied in Aruba, Bonaire and Curaçao by Kalki Materials.',
+};
+
+// Structured data describing the business, on the Home page.
+const ORGANIZATION = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Kalki Materials',
+  url: 'https://www.kalkimaterials.com/',
+  email: 'Kalkimaterials@gmail.com',
+  description: 'Curated architectural material distributor for Aruba, Bonaire and Curaçao, supplying engineered oak, limestone plaster, composite exterior systems and pool porcelain from four European manufacturers.',
+  parentOrganization: { '@type': 'Organization', name: 'IDEA II B.V.' },
+  areaServed: ['Aruba', 'Bonaire', 'Curaçao'].map(name => ({ '@type': 'Place', name })),
+};
+
 // sc-if conditions that change after load. They are rendered into the page
 // (shown or hidden) and toggled by site.js; every other condition is static.
 const DYNAMIC = new Set(['sent', 'notSent', 'panelOpen', 'mobileMenuVisible', 'menuOpen', 'menuClosed', 'accOpen']);
@@ -251,6 +274,26 @@ function buildPage(file) {
   const title = document.createElement('title');
   title.textContent = TITLES[base] || 'Kalki Materials';
   head.appendChild(title);
+  const url = 'https://www.kalkimaterials.com/' + encodeURIComponent(file);
+  const metas = [['name', 'description', DESCRIPTIONS[base]], ['property', 'og:title', title.textContent],
+    ['property', 'og:description', DESCRIPTIONS[base]], ['property', 'og:url', url], ['property', 'og:type', 'website']];
+  for (const [attr, key, content] of metas) {
+    if (!content) continue;
+    const m = document.createElement('meta');
+    m.setAttribute(attr, key);
+    m.setAttribute('content', content);
+    head.appendChild(m);
+  }
+  const canonical = document.createElement('link');
+  canonical.setAttribute('rel', 'canonical');
+  canonical.setAttribute('href', url);
+  head.appendChild(canonical);
+  if (base === 'Home') {
+    const ld = document.createElement('script');
+    ld.setAttribute('type', 'application/ld+json');
+    ld.textContent = JSON.stringify(ORGANIZATION);
+    head.appendChild(ld);
+  }
 
   const helmet = tdoc.querySelector('helmet');
   if (helmet) {
@@ -278,6 +321,14 @@ function buildPage(file) {
   console.log('built', file);
 }
 
-for (const file of readdirSync(SRC).filter(f => f.endsWith('.dc.html') && f !== 'SiteHeader.dc.html').sort()) {
-  buildPage(file);
-}
+const SITE_URL = 'https://www.kalkimaterials.com';
+const pages = readdirSync(SRC).filter(f => f.endsWith('.dc.html') && f !== 'SiteHeader.dc.html').sort();
+for (const file of pages) buildPage(file);
+
+// sitemap.xml for search engines; Home first, then the material pages.
+const order = f => (f === 'Home.dc.html' ? 0 : ['About.dc.html', 'Contact.dc.html'].includes(f) ? 2 : 1);
+const urls = [...pages].sort((a, b) => order(a) - order(b) || a.localeCompare(b)).map(f =>
+  `  <url>\n    <loc>${SITE_URL}/${encodeURIComponent(f)}</loc>\n    <priority>${['1.0', '0.8', '0.5'][order(f)]}</priority>\n  </url>`);
+writeFileSync(join(ROOT, 'sitemap.xml'),
+  '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls.join('\n') + '\n</urlset>\n');
+console.log('built sitemap.xml');
