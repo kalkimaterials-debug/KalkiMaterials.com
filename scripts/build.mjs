@@ -23,6 +23,9 @@ const TITLES = {
   'Wow Design': 'Wow Design, porcelain — Kalki Materials',
 };
 
+// Google Analytics 4 measurement ID.
+const GA_ID = 'G-SS20NMKHQG';
+
 // Meta descriptions, used by search engines and AI assistants.
 const DESCRIPTIONS = {
   'Home': 'Kalki Materials supplies architects, interior designers and contractors in Aruba, Bonaire and Curaçao with four European surface lines: engineered oak, limestone plaster, composite decking and cladding, and pool porcelain.',
@@ -271,6 +274,13 @@ function buildPage(file) {
 
   const head = document.head;
   head.innerHTML = '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">';
+  const gaLoader = document.createElement('script');
+  gaLoader.setAttribute('async', '');
+  gaLoader.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID);
+  head.appendChild(gaLoader);
+  const gaInit = document.createElement('script');
+  gaInit.textContent = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`;
+  head.appendChild(gaInit);
   const title = document.createElement('title');
   title.textContent = TITLES[base] || 'Kalki Materials';
   head.appendChild(title);
