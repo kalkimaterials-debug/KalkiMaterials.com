@@ -144,14 +144,25 @@ function send(res, status) {
   res.end(JSON.stringify({ ok: status === 200 }));
 }
 
+// Repo files that are not part of the public site.
+const PRIVATE = /^\/(?:\.|node_modules\/|source\/|scripts\/|server\.js|package(?:-lock)?\.json|serve\.json|README\.md)/i;
+
+function isPrivate(path) {
+  let p;
+  try { p = nodePath.posix.normalize(decodeURIComponent(path)); } catch { return true; }
+  return PRIVATE.test(p);
+}
+
+const clientIp = req => (req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+
 http.createServer(async (req, res) => {
   const path = req.url.split('?')[0];
+  if (isPrivate(path)) { res.writeHead(404); return res.end('Not found'); }
   const route = ROUTES[path];
   if (!route) return handler(req, res, config);
   if (req.method !== 'POST') return send(res, 405);
   if (!API_KEY) { console.error('RESEND_API_KEY is not set'); return send(res, 503); }
-  const ip = (req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
-  if (rateLimited(ip)) return send(res, 429);
+  if (rateLimited(clientIp(req))) return send(res, 429);
   try {
     const data = await readJson(req);
     if (data.website) return send(res, 200); // honeypot: bots fill hidden fields

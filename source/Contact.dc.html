@@ -124,19 +124,19 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;contactEmail&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Kalkimaterials@gmail.com&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5999XXXXXXX&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;contactEmail&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Kalkimaterials@gmail.com&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;+31 6 249 39 205&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
   state = { sent: false };
   renderVals() {
     const email = this.props.contactEmail ?? 'Kalkimaterials@gmail.com';
-    const raw = this.props.whatsappNumber ?? '5999XXXXXXX';
+    const raw = this.props.whatsappNumber ?? '+31 6 249 39 205';
     const wa = /x/i.test(raw) ? '' : raw.replace(/[^0-9]/g, '');
     return {
       sent: this.state.sent,
       notSent: !this.state.sent,
       hasWhatsapp: wa.length >= 7,
       contactEmail: email,
-      whatsappDisplay: '+' + raw.replace(/[^0-9X]/gi, ''),
+      whatsappDisplay: raw.trim(),
       whatsappLink: 'https://wa.me/' + wa + '?text=' + encodeURIComponent("Hi Kalki — I'd like to know more about your materials."),
       plainMailto: 'mailto:' + email,
       sampleMailto: 'mailto:' + email + '?subject=' + encodeURIComponent('Kalki Materials — sample request') + '&body=' + encodeURIComponent('Project:\nIsland:\nFinishes I\u2019d like to see:\n'),
