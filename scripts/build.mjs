@@ -7,6 +7,7 @@
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { parseHTML } from 'linkedom';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -266,7 +267,9 @@ function buildPage(file) {
   style.textContent = [...SHARED_CSS, ...hoverCss].join('\n');
   head.appendChild(style);
   const js = document.createElement('script');
-  js.setAttribute('src', 'site.js');
+  // Versioned URL so Cloudflare and browsers fetch the new file after each change.
+  const ver = createHash('sha1').update(readFileSync(join(ROOT, 'site.js'))).digest('hex').slice(0, 8);
+  js.setAttribute('src', 'site.js?v=' + ver);
   js.setAttribute('defer', '');
   head.appendChild(js);
 
