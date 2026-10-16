@@ -8,11 +8,15 @@
 //                       Resend's test sender, which only delivers to the
 //                       Resend account owner's own address.
 //   CONTACT_EMAIL       where enquiries go (default Kalkimaterials@gmail.com)
-//   CATALOGUE_URL       optional link to the catalogue PDF; when set, the
-//                       visitor gets an email with it
+//   SITE_URL            public address of the site, used for the catalogue
+//                       link (default https://www.kalkimaterials.com)
+//   CATALOGUE_URL       optional override for the catalogue link; by default
+//                       it is assets/kalki-catalogue.pdf on SITE_URL
 //   RESEND_AUDIENCE_ID  optional; newsletter sign-ups are added to this
 //                       Resend audience
 const http = require('node:http');
+const fs = require('node:fs');
+const nodePath = require('node:path');
 const handler = require('serve-handler');
 const config = require('./serve.json');
 
@@ -20,7 +24,13 @@ const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.RESEND_API_KEY;
 const FROM = process.env.RESEND_FROM || 'Kalki Materials <onboarding@resend.dev>';
 const TO = process.env.CONTACT_EMAIL || 'Kalkimaterials@gmail.com';
-const CATALOGUE_URL = process.env.CATALOGUE_URL || '';
+const SITE_URL = (process.env.SITE_URL || 'https://www.kalkimaterials.com').replace(/\/$/, '');
+const CATALOGUE_FILE = nodePath.join(__dirname, 'assets', 'kalki-catalogue.pdf');
+const HAS_CATALOGUE = fs.existsSync(CATALOGUE_FILE);
+const CATALOGUE_URL = process.env.CATALOGUE_URL || (HAS_CATALOGUE ? SITE_URL + '/assets/kalki-catalogue.pdf' : '');
+// Attach the PDF too when it is small enough to sit comfortably in an email.
+const CATALOGUE_ATTACHMENT = HAS_CATALOGUE && fs.statSync(CATALOGUE_FILE).size < 10 * 1024 * 1024
+  ? fs.readFileSync(CATALOGUE_FILE).toString('base64') : null;
 const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID || '';
 
 const EMAIL_RE = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
@@ -73,9 +83,10 @@ async function handleCatalogue(d) {
       from: FROM, to: [f.email], reply_to: TO,
       subject: 'Your Kalki Materials catalogue',
       html: `<div style="font-family:sans-serif;font-size:15px;line-height:1.6;color:#26221B">` +
-        `<p>Hi ${esc(f.name)},</p><p>Thanks for your interest. Here is the full catalogue — all four lines, with formats, finishes and technical data:</p>` +
+        `<p>Hi ${esc(f.name)},</p><p>Thanks for your interest. Here is the full catalogue — all four lines, with formats, finishes and technical data${CATALOGUE_ATTACHMENT ? '. It is attached to this email, and you can also download it here' : ''}:</p>` +
         `<p><a href="${esc(CATALOGUE_URL)}" style="display:inline-block;background:#B8623E;color:#FBF6EC;padding:12px 24px;text-decoration:none">Download the catalogue</a></p>` +
         `<p>Reply to this email with any questions about your project.</p><p>Kalki Materials</p></div>`,
+      ...(CATALOGUE_ATTACHMENT && { attachments: [{ filename: 'Kalki-Materials-Catalogue.pdf', content: CATALOGUE_ATTACHMENT }] }),
     });
   }
   if (d.monthlyDrop) await addToAudience(f.email, f.name);
