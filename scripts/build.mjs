@@ -44,6 +44,7 @@ const ORGANIZATION = {
   name: 'Kalki Materials',
   url: 'https://www.kalkimaterials.com/',
   email: 'Kalkimaterials@gmail.com',
+  telephone: '+31 6 249 39 205',
   description: 'Curated architectural material distributor for Aruba, Bonaire and Curaçao, supplying engineered oak, limestone plaster, composite exterior systems and pool porcelain from four European manufacturers.',
   parentOrganization: { '@type': 'Organization', name: 'IDEA II B.V.' },
   areaServed: ['Aruba', 'Bonaire', 'Curaçao'].map(name => ({ '@type': 'Place', name })),
