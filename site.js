@@ -85,17 +85,45 @@
   }
 
   // ---- Forms ----
+  // Both forms post to server.js, which emails them through Resend.
   document.querySelectorAll('form[data-form]').forEach(function (form) {
+    var kind = form.getAttribute('data-form');
+    var btn = form.querySelector('button[type="submit"]');
+    var label = btn ? btn.textContent : '';
+    var error = document.createElement('p');
+    error.setAttribute('role', 'alert');
+    error.style.cssText = 'margin:0;flex-basis:100%;font-size:0.85rem;color:#94472B';
+    error.hidden = true;
+    form.appendChild(error);
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var kind = form.getAttribute('data-form');
+      var data = {};
       if (kind === 'onJoin') {
-        var b = form.querySelector('button[type="submit"]');
-        if (b) b.textContent = 'Joined';
-      } else if (kind === 'submit') {
-        show(document, 'sent', true);
-        show(document, 'notSent', false);
+        data.email = form.querySelector('input[type="email"]').value;
+      } else {
+        new FormData(form).forEach(function (v, k) { data[k] = v; });
+        data.monthlyDrop = !!form.querySelector('[name="monthlyDrop"]:checked');
       }
+      error.hidden = true;
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+      fetch(kind === 'onJoin' ? '/api/newsletter' : '/api/catalogue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(function (res) {
+        if (!res.ok) throw new Error(res.status);
+        if (kind === 'onJoin') {
+          if (btn) btn.textContent = 'Joined';
+        } else {
+          show(document, 'sent', true);
+          show(document, 'notSent', false);
+        }
+      }).catch(function () {
+        if (btn) { btn.disabled = false; btn.textContent = label; }
+        error.textContent = 'Something went wrong. Please try again, or email us at Kalkimaterials@gmail.com.';
+        error.hidden = false;
+      });
     });
   });
 
