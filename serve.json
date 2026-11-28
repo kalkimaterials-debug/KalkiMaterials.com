@@ -1,5 +1,26 @@
 {
   "cleanUrls": false,
   "directoryListing": false,
-  "rewrites": [{ "source": "/", "destination": "/index.html" }]
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "type": 301 },
+    { "source": "/Home.dc.html", "destination": "/", "type": 301 },
+    { "source": "/About.dc.html", "destination": "/about", "type": 301 },
+    { "source": "/Contact.dc.html", "destination": "/contact", "type": 301 },
+    { "source": "/FB%20Hout.dc.html", "destination": "/fb-hout", "type": 301 },
+    { "source": "/FB Hout.dc.html", "destination": "/fb-hout", "type": 301 },
+    { "source": "/Mas%20Maya.dc.html", "destination": "/mas-maya", "type": 301 },
+    { "source": "/Mas Maya.dc.html", "destination": "/mas-maya", "type": 301 },
+    { "source": "/Tarimatec.dc.html", "destination": "/tarimatec", "type": 301 },
+    { "source": "/Wow%20Design.dc.html", "destination": "/wow-design", "type": 301 },
+    { "source": "/Wow Design.dc.html", "destination": "/wow-design", "type": 301 }
+  ],
+  "rewrites": [
+    { "source": "/", "destination": "/Home.dc.html" },
+    { "source": "/about", "destination": "/About.dc.html" },
+    { "source": "/contact", "destination": "/Contact.dc.html" },
+    { "source": "/fb-hout", "destination": "/FB Hout.dc.html" },
+    { "source": "/mas-maya", "destination": "/Mas Maya.dc.html" },
+    { "source": "/tarimatec", "destination": "/Tarimatec.dc.html" },
+    { "source": "/wow-design", "destination": "/Wow Design.dc.html" }
+  ]
 }

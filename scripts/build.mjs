@@ -4,6 +4,11 @@
 //   npm run build
 //
 // Edit the pages in source/, then rebuild and commit the generated files.
+// Public address of each page (see serve.json): Home is /, others are lower-case slugs.
+function cleanPath(file) {
+  const base = file.replace(/\.dc\.html$/, '');
+  return base === 'Home' ? '' : base.toLowerCase().replace(/\s+/g, '-');
+}
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -43,7 +48,7 @@ const ORGANIZATION = {
   '@type': 'Organization',
   name: 'Kalki Materials',
   url: 'https://www.kalkimaterials.com/',
-  email: 'Kalkimaterials@gmail.com',
+  email: 'desk@kalkimaterials.com',
   description: 'Curated architectural material distributor for Aruba, Bonaire and Curaçao, supplying engineered oak, limestone plaster, composite exterior systems and pool porcelain from four European manufacturers.',
   parentOrganization: { '@type': 'Organization', name: 'IDEA II B.V.' },
   areaServed: ['Aruba', 'Bonaire', 'Curaçao'].map(name => ({ '@type': 'Place', name })),
@@ -284,7 +289,7 @@ function buildPage(file) {
   const title = document.createElement('title');
   title.textContent = TITLES[base] || 'Kalki Materials';
   head.appendChild(title);
-  const url = 'https://www.kalkimaterials.com/' + encodeURIComponent(file);
+  const url = 'https://www.kalkimaterials.com/' + cleanPath(file);
   const metas = [['name', 'description', DESCRIPTIONS[base]], ['property', 'og:title', title.textContent],
     ['property', 'og:description', DESCRIPTIONS[base]], ['property', 'og:url', url], ['property', 'og:type', 'website']];
   for (const [attr, key, content] of metas) {
@@ -338,7 +343,7 @@ for (const file of pages) buildPage(file);
 // sitemap.xml for search engines; Home first, then the material pages.
 const order = f => (f === 'Home.dc.html' ? 0 : ['About.dc.html', 'Contact.dc.html'].includes(f) ? 2 : 1);
 const urls = [...pages].sort((a, b) => order(a) - order(b) || a.localeCompare(b)).map(f =>
-  `  <url>\n    <loc>${SITE_URL}/${encodeURIComponent(f)}</loc>\n    <priority>${['1.0', '0.8', '0.5'][order(f)]}</priority>\n  </url>`);
+  `  <url>\n    <loc>${SITE_URL}/${cleanPath(f)}</loc>\n    <priority>${['1.0', '0.8', '0.5'][order(f)]}</priority>\n  </url>`);
 writeFileSync(join(ROOT, 'sitemap.xml'),
   '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls.join('\n') + '\n</urlset>\n');
 console.log('built sitemap.xml');
